@@ -1,65 +1,90 @@
 .container {
   display: flex;
   flex-direction: column;
+  height: 95vh;
 }
-
+body {
+  transition: all 0.5s;
+}
 div {
   border: 0px solid;
 }
 
 main {
   display: flex;
-  max-height: 50vh;
+  border-bottom: 0.5px solid;
+  border-color: #cacaca;
+  height: 100vh;
 }
 
 #header {
   background-color: white;
+  border-bottom: 0.5px solid;
+  border-color: #cacaca;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 0rem 2rem;
+  justify-content: baseline;
+  padding: 1rem;
+}
+#header * {
+  margin: 0rem 2rem;
 }
 
 body {
-  background-color: rgba(235, 235, 235, 0.39);
+  background-color: white;
 }
 .explanation {
   display: flex;
   padding: 2rem;
   overflow-y: scroll;
 }
+button {
+  box-sizing: content-box;
+  border: 0.2px solid;
+  background-color: white;
+  border-color: #cacaca;
+  width: 200px;
+  border-top: none;
+}
+
 .explanation * {
   padding: 0rem 2rem;
 }
 .explan {
   overflow-y: scroll;
+  margin: 0rem 2rem;
 
   width: 100%;
+}
+#table {
+}
+input {
+  width: 200px;
+  border: 0.2px solid;
+  border-bottom: none;
+  border-color: #cacaca;
 }
 .input {
   display: flex;
   flex-direction: column;
-  padding: 2rem;
+  align-items: center;
+  width: 600px;
+  border-right: 0.5px solid;
+  border-color: #cacaca;
 }
 .input-item * {
   padding: 10px 0px;
   margin: 0px 5px;
 }
 
-.select {
-  margin: 2rem 0rem;
-}
-
 ::placeholder {
   text-align: center;
 }
-.select select {
-  padding: 0.5rem 1rem;
-}
+
 .select * {
   border-style: none;
   border-radius: 0.2rem;
 }
 
-#result {
+.select {
+  margin: 2rem;
 }

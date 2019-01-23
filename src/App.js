@@ -80,10 +80,6 @@ const Explan = props => {
     return (
       <React.Fragment>
         <tr>
-          <th>Remainder</th>
-          <th>Number</th>
-        </tr>
-        <tr>
           <td>{step.remainder}</td>
           <td>{step.number}</td>
         </tr>
@@ -94,10 +90,6 @@ const Explan = props => {
     return (
       <React.Fragment>
         <tr>
-          <th>Left</th>
-          <th>Right</th>
-        </tr>
-        <tr>
           <td>{step.left}</td>
           <td>{step.right}</td>
         </tr>
@@ -106,8 +98,28 @@ const Explan = props => {
   });
   return (
     <div className="explanation">
-      <table className="table">{leftSteps}</table>
-      <table>{rightSteps}</table>
+      <div id="table">
+        <table className="table">
+          <tr style={{ borderRight: ".2px solid" }}>
+            <td>Remainder</td>
+            <td>Number</td>
+          </tr>
+          <br />
+
+          {leftSteps}
+        </table>
+      </div>
+      <div>
+        <table>
+          <tr>
+            <td>Left</td>
+            <td>Right</td>
+          </tr>
+          <br />
+
+          {rightSteps}
+        </table>
+      </div>
     </div>
   );
 };
@@ -118,7 +130,6 @@ const Display = props => {
     <div className="container">
       <div id="header">
         <h3>Base Converter Tool</h3>
-        <p>Convert between the most popular bases in computer science</p>
       </div>
       <main>
         <div className="input">
@@ -132,6 +143,9 @@ const Display = props => {
               <option>2</option>
             </select>
           </div>
+          <div id="result">
+            <p placeholder="result">{result}</p>
+          </div>
 
           <div className="input-item text">
             <input
@@ -139,11 +153,9 @@ const Display = props => {
               placeholder="enter value"
               onChange={e => updateInput(e.target.value)}
             />
-            <button onClick={() => convert()}>Convert</button>
           </div>
-
-          <div id="result">
-            <h1>{result}</h1>
+          <div className="input-item">
+            <button onClick={() => convert()}>Convert</button>
           </div>
         </div>
 
@@ -156,3 +168,13 @@ const Display = props => {
 };
 
 export default App;
+/*<p>
+            The whole number on the left side of the decimal point (.) is
+            divided by 2 until it becomes 0. The remainder of each division
+            becomes its binary representation. To get the binary value you have
+            to reverse the remainders. If the number contains decimal points,
+            the number for example 1.23. .23 will be multiplied by 2 until the
+            result on the right side of the decimal point = 0 or it is done 10
+            times. For example 0.5 * 2 = 1.0 The 1 is the first binary unit,
+            then you multiply the .0 which is 0. The problem is complete
+          </p> */
