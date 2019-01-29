@@ -131,22 +131,28 @@ const decimalTo = (num, base) => {
 
 //converts between any base 2 - 16
 export const convert = (num, iBase, fBase) => {
+  let result = {}
   //console.log("num: " + num)
   if (iBase === 10) { //if base 10
     if (fBase === 10)
       return num
     else { //if fBase not 10 convert to 10
         console.log("converting num to base "+fBase +" from base " +iBase )
-        return  decimalTo(num, fBase)
+        result.result = decimalTo(num, fBase)
+        return result
     }  
   } 
   else if (iBase !== 10) //if inital base other
     num = baseToDecimal(num,iBase)
   //now num will be decimal
-  if (fBase === 10) 
-    return num
-  else  
-    return decimalTo(num, fBase)
+  if (fBase === 10) {
+    result.result = num;
+    return result
+  }
+  else {
+    result.result = decimalTo(num, fBase)
+    return result
+  }  
 }
 
 

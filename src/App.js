@@ -1,14 +1,17 @@
 import React, { Component } from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import { tenToBinary } from "./helper";
+import { convert } from "./helper";
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.convert = this.convert.bind(this);
     this.updateInput = this.updateInput.bind(this);
+    this.updateInitialBase = this.updateInitialBase.bind(this);
+    this.updateFinalBase = this.updateFinalBase.bind(this);
     this.state = {
+      options: [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
       data: {
         result: "",
         right: {
@@ -18,7 +21,7 @@ class App extends Component {
           steps: []
         }
       },
-      from: "10",
+      from: "2",
       to: "2",
       input: 0,
       result: ""
@@ -26,16 +29,30 @@ class App extends Component {
   }
 
   //functions go here
-  updateInput(value) {
-    let asInt = Number(value);
-    console.log(asInt);
+
+  updateInitialBase(value) {
+    let asInt = Number(value)
     this.setState({
-      input: asInt
+      from: asInt
+    })
+  }
+
+  updateFinalBase(value) {
+    let asInt = Number(value)
+    this.setState({
+      to: asInt
+    })
+  }
+  updateInput(value) {
+    if (Number(value))
+      value = Number(value)
+    this.setState({
+      input: value
     });
   }
   convert() {
     let { from, to, input } = this.state;
-    let data = tenToBinary(input);
+    let data = convert(input, from, to);
 
     let result = data.result;
     console.log(data);
@@ -52,7 +69,10 @@ class App extends Component {
         result={this.state.result}
         convert={this.convert}
         updateInput={this.updateInput}
+        updateInitialBase={this.updateInitialBase}
+        updateFinalBase={this.updateFinalBase}
         data={this.state.data}
+        options={this.state.options}
       />
     );
   }
@@ -99,7 +119,7 @@ const Explan = props => {
   return (
     <div className="explanation">
       <div id="table">
-        <table className="table">
+        <table className="">
           <tr style={{ borderRight: ".2px solid" }}>
             <td>Remainder</td>
             <td>Number</td>
@@ -124,8 +144,19 @@ const Explan = props => {
   );
 };
 
+
+
 const Display = props => {
-  let { result, convert, updateInput, data } = props;
+  let { result, convert, updateInput, updateFinalBase, updateInitialBase, data , options} = props;
+
+
+  const list = options.map( option => {
+    return (
+      <option>{option}</option>
+    )
+  })
+  
+
   return (
     <div className="container">
       <div id="header">
@@ -135,12 +166,12 @@ const Display = props => {
         <div className="input">
           <div className="input-item select">
             <span>From</span>
-            <select>
-              <option>10</option>
+            <select onChange={(e) => updateInitialBase(e.target.value)}>
+              {list}
             </select>
             <span>To</span>
-            <select>
-              <option>2</option>
+            <select onChange={(e) => updateFinalBase(e.target.value)}>
+              {list}
             </select>
           </div>
           <div id="result">
@@ -160,7 +191,7 @@ const Display = props => {
         </div>
 
         <div className="explan">
-          <Explan data={data} />
+
         </div>
       </main>
     </div>
