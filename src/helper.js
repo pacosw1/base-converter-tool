@@ -134,8 +134,11 @@ export const convert = (num, iBase, fBase) => {
   let result = {}
   //console.log("num: " + num)
   if (iBase === 10) { //if base 10
-    if (fBase === 10)
-      return num
+    if (fBase === 10) {
+      result.result = num;
+      return result
+    }
+
     else { //if fBase not 10 convert to 10
         console.log("converting num to base "+fBase +" from base " +iBase )
         result.result = decimalTo(num, fBase)

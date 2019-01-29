@@ -6,7 +6,7 @@ import { convert } from "./helper";
 class App extends Component {
   constructor(props) {
     super(props);
-    this.convert = this.convert.bind(this);
+    this.calc = this.calc.bind(this);
     this.updateInput = this.updateInput.bind(this);
     this.updateInitialBase = this.updateInitialBase.bind(this);
     this.updateFinalBase = this.updateFinalBase.bind(this);
@@ -30,27 +30,7 @@ class App extends Component {
 
   //functions go here
 
-  updateInitialBase(value) {
-    let asInt = Number(value)
-    this.setState({
-      from: asInt
-    })
-  }
-
-  updateFinalBase(value) {
-    let asInt = Number(value)
-    this.setState({
-      to: asInt
-    })
-  }
-  updateInput(value) {
-    if (Number(value))
-      value = Number(value)
-    this.setState({
-      input: value
-    });
-  }
-  convert() {
+  calc() {
     let { from, to, input } = this.state;
     let data = convert(input, from, to);
 
@@ -63,11 +43,40 @@ class App extends Component {
     });
   }
 
+  updateInitialBase(value) {
+    let asInt = Number(value)
+    let res = convert(this.state.input,asInt, this.state.to).result
+    this.setState({
+      from: asInt,
+      result: res
+    })
+   
+  }
+
+  updateFinalBase(value) {
+    let asInt = Number(value)
+    let res = convert(this.state.input,this.state.from, asInt).result
+    this.setState({
+      to: asInt,
+      result: res
+    })
+  }
+  updateInput(value) {
+    if (Number(value))
+      value = Number(value)
+    this.setState({
+      result: convert( value,this.state.from, this.state.to).result,
+      input: value
+    });
+    
+  }
+ 
+
   render() {
     return (
       <Display
         result={this.state.result}
-        convert={this.convert}
+        calc={this.calc}
         updateInput={this.updateInput}
         updateInitialBase={this.updateInitialBase}
         updateFinalBase={this.updateFinalBase}
@@ -147,7 +156,7 @@ const Explan = props => {
 
 
 const Display = props => {
-  let { result, convert, updateInput, updateFinalBase, updateInitialBase, data , options} = props;
+  let { result, calc, updateInput, updateFinalBase, updateInitialBase, data , options} = props;
 
 
   const list = options.map( option => {
@@ -186,7 +195,7 @@ const Display = props => {
             />
           </div>
           <div className="input-item">
-            <button onClick={() => convert()}>Convert</button>
+            <button onClick={() => calc()}>Convert</button>
           </div>
         </div>
 
