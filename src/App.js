@@ -2,16 +2,33 @@ import React, { Component } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { convert } from "./helper";
+var FontAwesome = require("react-fontawesome");
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.calc = this.calc.bind(this);
+    this.swap = this.swap.bind(this);
     this.updateInput = this.updateInput.bind(this);
     this.updateInitialBase = this.updateInitialBase.bind(this);
     this.updateFinalBase = this.updateFinalBase.bind(this);
     this.state = {
-      options: [2,3,4,5,6,7,8,9,10,11,12,13,14,15,16],
+      options: [
+        { name: "Decimal", id: 10 },
+        { name: "Binary", id: 2 },
+        { name: "HexaDec", id: 16 },
+        { name: "base 3", id: 3 },
+        { name: "Base 4", id: 4 },
+        { name: "Base 5", id: 5 },
+        { name: "Base 6", id: 6 },
+        { name: "Base 7", id: 7 },
+        { name: "Base 9", id: 9 },
+        { name: "Base 11", id: 11 },
+        { name: "Base 12", id: 12 },
+        { name: "Base 13", id: 13 },
+        { name: "Base 14", id: 14 },
+        { name: "Base 15", id: 15 }
+      ],
       data: {
         result: "",
         right: {
@@ -24,12 +41,33 @@ class App extends Component {
       from: "2",
       to: "2",
       input: 0,
-      result: ""
+      result: "0"
     };
   }
 
   //functions go here
 
+  swap() {
+    let { to, from, input, options } = this.state;
+
+    let fromSelector = document.getElementById("from");
+    let toSelector = document.getElementById("to");
+    let fromId = options.find(option => option.name === fromSelector.value);
+    let toId = options.find(option => option.name === toSelector.value);
+    let temp = 0;
+    toSelector.value = fromId.name;
+    fromSelector.value = toId.name;
+    temp = toId.id;
+    toId = fromId.id;
+    fromId = temp;
+    let res = convert(input, fromId, toId).result;
+    console.log("to: " + toId);
+    this.setState({
+      to: toId,
+      from: fromId,
+      result: res
+    });
+  }
   calc() {
     let { from, to, input } = this.state;
     let data = convert(input, from, to);
@@ -44,33 +82,33 @@ class App extends Component {
   }
 
   updateInitialBase(value) {
-    let asInt = Number(value)
-    let res = convert(this.state.input,asInt, this.state.to).result
+    console.log(value);
+    let x = this.state.options.find(x => x.name === value);
+    let id = x.id;
+    console.log(id);
+    let res = convert(this.state.input, id, this.state.to).result;
     this.setState({
-      from: asInt,
-      result: res
-    })
-   
+      from: id
+      //result: res
+    });
   }
 
   updateFinalBase(value) {
-    let asInt = Number(value)
-    let res = convert(this.state.input,this.state.from, asInt).result
+    let x = this.state.options.find(x => x.name === value);
+    let id = x.id;
+    let res = convert(this.state.input, this.state.from, id).result;
     this.setState({
-      to: asInt,
-      result: res
-    })
+      to: id
+      //result: res
+    });
   }
   updateInput(value) {
-    if (Number(value))
-      value = Number(value)
+    if (Number(value)) value = Number(value);
     this.setState({
-      result: convert( value,this.state.from, this.state.to).result,
+      result: convert(value, this.state.from, this.state.to).result,
       input: value
     });
-    
   }
- 
 
   render() {
     return (
@@ -82,6 +120,9 @@ class App extends Component {
         updateFinalBase={this.updateFinalBase}
         data={this.state.data}
         options={this.state.options}
+        from={this.state.from}
+        to={this.state.to}
+        swap={this.swap}
       />
     );
   }
@@ -153,18 +194,23 @@ const Explan = props => {
   );
 };
 
-
-
 const Display = props => {
-  let { result, calc, updateInput, updateFinalBase, updateInitialBase, data , options} = props;
+  let {
+    result,
+    calc,
+    updateInput,
+    updateFinalBase,
+    updateInitialBase,
+    data,
+    options,
+    swap,
+    from,
+    to
+  } = props;
 
-
-  const list = options.map( option => {
-    return (
-      <option>{option}</option>
-    )
-  })
-  
+  const list = options.map(option => {
+    return <option id={option.id}>{option.name}</option>;
+  });
 
   return (
     <div className="container">
@@ -173,18 +219,34 @@ const Display = props => {
       </div>
       <main>
         <div className="input">
-          <div className="input-item select">
-            <span>From</span>
-            <select onChange={(e) => updateInitialBase(e.target.value)}>
-              {list}
-            </select>
-            <span>To</span>
-            <select onChange={(e) => updateFinalBase(e.target.value)}>
-              {list}
-            </select>
+          <div id="title">
+            <h5>Convert between any base instantly.</h5>
+            <br />
+            <p>
+              You can also use numbers with decimals and letters for bases 11 -
+              16.
+            </p>
           </div>
+          <div id="inputbar">
+            <div className="input-item select">
+              <select
+                id="from"
+                onChange={e => updateInitialBase(e.target.value)}
+              >
+                {list}
+              </select>
+              <FontAwesome className="fas fa-exchange" onClick={() => swap()} />
+              <select id="to" onChange={e => updateFinalBase(e.target.value)}>
+                {list}
+              </select>
+            </div>
+          </div>
+          <p style={{ textAlign: "left", color: "#cacaca" }}>Result</p>
           <div id="result">
-            <p placeholder="result">{result}</p>
+            <p placeholder="result">
+              {result}
+              <sub>{to}</sub>
+            </p>
           </div>
 
           <div className="input-item text">
@@ -194,14 +256,9 @@ const Display = props => {
               onChange={e => updateInput(e.target.value)}
             />
           </div>
-          <div className="input-item">
-            <button onClick={() => calc()}>Convert</button>
-          </div>
         </div>
 
-        <div className="explan">
-
-        </div>
+        <div className="explan" />
       </main>
     </div>
   );
